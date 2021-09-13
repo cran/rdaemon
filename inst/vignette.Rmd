@@ -1,0 +1,166 @@
+---
+title: "Vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(badger)
+library(rdaemon)
+```
+
+```{r, include = FALSE}
+if(FALSE){
+  makeReadMe <- function(){
+    library(readr)
+    fileName <- "../vignettes/vignette.Rmd"
+    content <- readChar(fileName, file.info(fileName)$size)
+    content <- gsub("---.+?---","",content)
+    content <- gsub("^(\r\n)+","",content)
+    content <- gsub("([a-zA-Z_]+)\\.jpg","vignettes/\\1.jpg",content)
+    write_file(content, file="../README.md")
+  }
+  knitr::knit("vignette.Rmd", output = "../vignettes/vignette.md")
+  file.rename("../vignettes/vignette.md", "../vignettes/vignette.Rmd")
+  makeReadMe()
+}
+```
+
+`r badge_github_actions("Jiefei-Wang/rdaemon")`
+`r badge_cran_release("rdaemon", "orange")` 
+`r badge_cran_download("rdaemon", "grand-total", "blue")`
+`r badge_cran_download("badger", "last-month", "green")`
+
+# Introduction
+R is a single process language that is designed for interactively used by the user. However, there are some special cases where we might need a daemon process running in the background to silently do some works. However, R does not have a direct support for the daemon process, implementing the daemon requires the experience in both R language and shell scripting, which can be difficult for the non-programmer who just has a limited knowledge of R. 
+
+`rdaemon` is a package which is specifically designed for using R as a daemon process. A daemon process can be easily started and managed by pure R functions using `rdaemon`. The package is able to run one or many daemon from a single R session and each daemon will be uniquely identified by a daemon name. The daemon will keep running even after the R session quits. Therefore, it is user's responsibility to quit the daemon after using it.
+
+The daemon organizes user's code using the task. A task is combination of the R expression and its running environment and will be run repeatedly by the daemon. A daemon can have one or more tasks. The tasks are distinguished by the task ID. Below are the diagram for the daemon
+
+![](daemon_structure.jpg)
+Note that when multiple tasks are in the same daemon, the daemon will run them sequentially. Therefore, it is recommended to keep each task relatively simple if many tasks exist in the same daemon. Otherwise a long-running task might block the execution of the other tasks.
+
+`rdaemon` supports many programming models, below are the common use cases.
+
+![](framework.jpg)
+
+In this vignette, we will first cover the basic use case, and then talks about some advanced topics. Here is a list of terminology we will use through this vignette
+
+1. Daemon: A non-interactive R process running in the backgroud
+2. R session: An R process which can be used by the user to control the daemon. It is mostly an interactive foreground process, but can also be non-interactive.
+3. Task: A combination of the R expression and environment evaluated by the daemon regularly.
+
+
+# Basic usage
+## Start a daemon
+For starting a new daemon or connecting with an existing daemon, you can simple run
+```{r}
+registerDaemon(daemonName = "vignetteDaemon")
+```
+This will start a daemon named `"vignetteDaemon"` if the daemon does not exist. Note that if you do not provide the daemon name, a default name will be used which is unique for each R process. In other words, unless you explicitly use the same daemon name, the first call of `registerDaemon()` will always start a new daemon for the current R session by default. There is a certain limit on the number of characters in the daemon name and it varies greatly depending on the OS. A rule of thumb is to keep your name length less than 20 characters. Please do not use any non-letter character in the name as it might be not portable.
+
+
+## Set the daemon task
+As we stated in the introduction, the daemon organize user's code using the task. The task can be set via `daemonSetTask()`. For example
+```{r}
+## Set the task expression and environment for the task with the ID "task1"
+## in the daemon named "vignetteDaemon"
+daemonSetTask(expr = message("The variable a is ", a), 
+              exports = list(a = 1),
+              taskId = "task1")
+
+## Wait and collect the daemon logs to see the output
+Sys.sleep(2)
+daemonLogs()
+```
+Where `expr` is an R expression that will be set to the task, `exports` is a list of object that will be exported to the task environment and must be named. `taskId` determines the ID of the task which will be affected by this function call.
+
+You might notice that we did not provide the daemon name in the above code snippet, this is because that the package can memorize the last registered daemon in `registerDaemon()` call. Therefore, unless you want to use a different daemon name, You do not have to explicitly provide the daemon name after calling `registerDaemon()`. Likewise, the task ID will also be recorded and used as the default task ID in the subsequent function calls after `daemonSetTask()`.
+
+You can also set the task expression via an R script. For example
+```{r}
+## Generate a temp script
+script <- tempfile()
+cat("message('Hello from the script')", file = script)
+
+## Set the task expression for the task with the ID "task1"
+## We do not have to provide the task ID as 
+## it has been memorized by the package
+daemonSetTaskScript(script)
+
+## Wait and collect the daemon log to see the output
+Sys.sleep(2)
+daemonLogs()
+```
+`daemonSetTaskScript()` will ultimately use `daemonSetTask()` to set the task expression, so if you use a different task ID in `daemonSetTaskScript()`, it will also affect the default task ID for the subsequent function call.
+
+You can explicitly export some variables to the task using `daemonExport()`
+```{r}
+daemonExport(b = 2)
+```
+
+By default, the task will be run once per second. You can also increase/decrease its frequency by passing the argument `interval` to `daemonSetTask()` or calling `daemonSetTaskInterval()`
+```{r}
+## Run the task once per 2 seconds
+daemonSetTaskInterval(interval = 2)
+```
+
+The task expression can be retrieved by 
+```{r}
+daemonGetTask()
+```
+
+There is no function to directly get the task environment, but you can get the variable in the task environment by evaluating an expression in the task environment using `daemonEval()`
+```{r}
+## List variables in the task environment
+daemonEval(ls())
+
+## Get the variable `a`
+daemonEval(a)
+```
+
+## Deregister or kill the daemon
+To close the connection to the daemon, simply run
+```{r}
+deregisterDaemon()
+```
+By default, this will remove the task `task1` as well. However, you can keep the task running while close the connection by passing `deleteTask = FALSE` to `deregisterDaemon()`
+
+To kill the daemon, run
+```{r}
+killDaemon()
+```
+This will terminate the daemon process.
+
+# Advanced topics
+## Debugging the task
+The task expression can be get by `daemonGetTask()` and the daemon log can be obtained by `daemonLogs()`. You can run `daemonEval()` to evaluate an expression under the task environment to see if your code is working in the daemon.
+
+
+## One-time connection
+Sometimes we might only want to query the daemon status once and do not need to register the daemon as our default daemon. This can be easily done by explicitly providing the daemon name in the daemon function. For example, if a daemon named `"monitorDaemon"` is running in the background, you can ask it to send its logs without registering the daemon
+```{r, eval=FALSE}
+daemonLogs(daemonName = "monitorDaemon")
+```
+You need to check whether the daemon is running before using the one-time connection if you want to use this feature in non-interactive R sessions. An error will be thrown if the daemon does not exist. 
+
+# Utility functions
+Besides the daemon functions, the package also provides a few utility functions to help manage the process. 
+
+`interruptProcess()` is used to send SIGINT signal to the other process given the pid of the process. Even though this function can be called from any R session, it is recommended to only use it inside the daemon task.
+
+`isProcessAlive()` can be used to check whether a process is running or not. This function does not have the restriction like `interruptProcess()` and can be called from user's R session.
+
+
+## Session info
+```{r}
+sessionInfo()
+```

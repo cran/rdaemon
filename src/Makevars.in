@@ -1,0 +1,9 @@
+PKG_LIBS = @LIBS@
+
+all: ${SHLIB}
+
+clean:
+	rm Makevars
+	rm ../config.log
+	rm ../config.status
+	rm -r -f ../autom4te.cache
