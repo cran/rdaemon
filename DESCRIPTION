@@ -1,8 +1,8 @@
 Package: rdaemon
 Type: Package
 Title: Run an R Daemon Process in the Background
-Version: 1.0.5
-Date: 2021-09-10
+Version: 1.0.6
+Date: 2021-09-15
 Authors@R: 
     person(given = "Jiefei",
            family = "Wang",
@@ -22,8 +22,8 @@ Suggests: rmarkdown, markdown, knitr, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2021-09-10 09:48:30 UTC; lenovo
+Packaged: 2021-09-15 16:02:19 UTC; lenovo
 Author: Jiefei Wang [aut, cre]
 Maintainer: Jiefei Wang <szwjf08@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-09-13 08:50:01 UTC
+Date/Publication: 2021-09-15 21:10:02 UTC

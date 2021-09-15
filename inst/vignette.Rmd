@@ -36,7 +36,7 @@ if(FALSE){
 `r badge_github_actions("Jiefei-Wang/rdaemon")`
 `r badge_cran_release("rdaemon", "orange")` 
 `r badge_cran_download("rdaemon", "grand-total", "blue")`
-`r badge_cran_download("badger", "last-month", "green")`
+`r badge_cran_download("rdaemon", "last-month", "green")`
 
 # Introduction
 R is a single process language that is designed for interactively used by the user. However, there are some special cases where we might need a daemon process running in the background to silently do some works. However, R does not have a direct support for the daemon process, implementing the daemon requires the experience in both R language and shell scripting, which can be difficult for the non-programmer who just has a limited knowledge of R. 

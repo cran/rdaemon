@@ -1,6 +1,6 @@
-c0f3956830ffff0b774ec34265e4beef *DESCRIPTION
+42e5712a008a54a24cf4f81c6b3350a5 *DESCRIPTION
 bece6df2775c3c0d1e4c229393e32cf3 *NAMESPACE
-5a6e4bbb2bf6d4a96df920f0554029b7 *NEWS.md
+c8f0f99ed13a1dc0fb544480d6063a47 *NEWS.md
 f56430769f27aaf74975b5c20acc48f6 *R/IPC.R
 e307c3200fd7cf7c210f1867a2550fe8 *R/RcppExports.R
 e90fe1266f7baf6600c69bf257e6a631 *R/daemon-client.R
@@ -13,14 +13,14 @@ bb1ef53a2e118b7eea17c51990f0f65c *R/socket.R
 15f6e1736e09e6369a5ed06edc5a477a *R/utiles-export.R
 277c04b9b5340b80101c68db7d19685b *R/utils.R
 59103d7a5add07681ee05be7ae0f0b01 *R/zzz.R
-ac6470fbc6f8ac392f3306c6282c64e6 *README.md
+76736898ba07ec2a8c34e22099c54eb4 *README.md
 1d48ba613b8465fba2bf6b01ce6a6b4f *build/vignette.rds
 9380223805c2f668ac741bbe669faac7 *configure
 0613b62d2071f6dc5bb3a9ef2e173fe6 *configure.ac
-9220eef3624377e54b1996ea6a7ef927 *inst/doc/vignette.Rmd
-9a47bd3763c93eda44ef4b1287ae25e7 *inst/doc/vignette.html
+4729ae65e22a375305c00e03e2149b38 *inst/doc/vignette.Rmd
+9ef4271c91c37becb2bb6c78233a40bc *inst/doc/vignette.html
 1fa2578ea137240fdbb6aff30b73d988 *inst/scripts/startDaemon.R
-79b62f7a487fe70a9302f7fc19e3980c *inst/vignette.Rmd
+bd6aaf2b8cfca2a4fff746e313cca18f *inst/vignette.Rmd
 e64d395b7fd4cd9e2548f3975b7417b3 *man/daemon-utils.Rd
 dec873b1d9025baa24d8a7f80c628a8c *man/rdaemon-methods.Rd
 04fe5023557b4ff52bfe82960ca85feb *man/rdaemon-package.Rd
@@ -28,7 +28,7 @@ dec873b1d9025baa24d8a7f80c628a8c *man/rdaemon-methods.Rd
 11cebc06f9407ac34c16bd357a4b0cdd *src/RcppExports.cpp
 467851d3501080b1a167b5f83bee5a39 *src/SIGINT.cpp
 bd58f9c238e1a7b0230b483f96d7ad76 *src/detachConsole.cpp
-2b2959cbe60a5453807bb9617878ce48 *src/globalVariables.cpp
+7c3b3c090248664e48be047c36a46e00 *src/globalVariables.cpp
 dadecdd32c5feabb75c30a1112ffe9cf *src/isProcessRunning.cpp
 86afb8557e646469cdd07163aced29c9 *tests/testthat.R
 c0a47cedd8ebfe7a377c16cfd3128678 *tests/testthat/test_1_globalVariables.R
@@ -36,4 +36,4 @@ c0a47cedd8ebfe7a377c16cfd3128678 *tests/testthat/test_1_globalVariables.R
 08f00ce6baf409f6e39f63c044aeb5e1 *tests/testthat/test_3_export.R
 2f684892538808c02907d960bed71ee2 *vignettes/daemon_structure.jpg
 e6eded25f26f66b2bf6749732124cb40 *vignettes/framework.jpg
-9220eef3624377e54b1996ea6a7ef927 *vignettes/vignette.Rmd
+4729ae65e22a375305c00e03e2149b38 *vignettes/vignette.Rmd

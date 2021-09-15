@@ -1,7 +1,7 @@
 [![R build status](https://github.com/Jiefei-Wang/rdaemon/workflows/R-CMD-check/badge.svg)](https://github.com/Jiefei-Wang/rdaemon/actions)
 [![](https://www.r-pkg.org/badges/version/rdaemon?color=orange)](https://cran.r-project.org/package=rdaemon) 
 [![](http://cranlogs.r-pkg.org/badges/grand-total/rdaemon?color=blue)](https://cran.r-project.org/package=rdaemon)
-[![](http://cranlogs.r-pkg.org/badges/last-month/badger?color=green)](https://cran.r-project.org/package=badger)
+[![](http://cranlogs.r-pkg.org/badges/last-month/rdaemon?color=green)](https://cran.r-project.org/package=rdaemon)
 
 # Introduction
 R is a single process language that is designed for interactively used by the user. However, there are some special cases where we might need a daemon process running in the background to silently do some works. However, R does not have a direct support for the daemon process, implementing the daemon requires the experience in both R language and shell scripting, which can be difficult for the non-programmer who just has a limited knowledge of R. 
@@ -47,8 +47,8 @@ daemonSetTask(expr = message("The variable a is ", a),
 ## Wait and collect the daemon logs to see the output
 Sys.sleep(2)
 daemonLogs()
-#> INFO [2021-09-09 20:07:08] Daemon PID: 35740
-#> INFO [2021-09-09 20:07:09] A connection from the pid 31996 is established
+#> INFO [2021-09-15 23:52:59] Daemon PID: 17236
+#> INFO [2021-09-15 23:53:01] A connection from the pid 24340 is established
 #> The variable a is 1
 ```
 Where `expr` is an R expression that will be set to the task, `exports` is a list of object that will be exported to the task environment and must be named. `taskId` determines the ID of the task which will be affected by this function call.
@@ -70,8 +70,8 @@ daemonSetTaskScript(script)
 ## Wait and collect the daemon log to see the output
 Sys.sleep(2)
 daemonLogs()
-#> INFO [2021-09-09 20:07:08] Daemon PID: 35740
-#> INFO [2021-09-09 20:07:09] A connection from the pid 31996 is established
+#> INFO [2021-09-15 23:52:59] Daemon PID: 17236
+#> INFO [2021-09-15 23:53:01] A connection from the pid 24340 is established
 #> The variable a is 1
 #> Hello from the script
 #> Hello from the script
@@ -104,7 +104,6 @@ There is no function to directly get the task environment, but you can get the v
 ## List variables in the task environment
 daemonEval(ls())
 #> [1] "a" "b"
-
 ## Get the variable `a`
 daemonEval(a)
 #> [1] 1
@@ -157,8 +156,10 @@ sessionInfo()
 #> Matrix products: default
 #> 
 #> locale:
-#> [1] LC_COLLATE=English_United States.1252  LC_CTYPE=English_United States.1252   
-#> [3] LC_MONETARY=English_United States.1252 LC_NUMERIC=C                          
+#> [1] LC_COLLATE=English_United States.1252 
+#> [2] LC_CTYPE=English_United States.1252   
+#> [3] LC_MONETARY=English_United States.1252
+#> [4] LC_NUMERIC=C                          
 #> [5] LC_TIME=English_United States.1252    
 #> system code page: 936
 #> 
@@ -166,19 +167,29 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] readr_1.4.0   badger_0.1.0  rdaemon_1.0.4
+#> [1] rdaemon_1.0.5 badger_0.1.0 
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] Rcpp_1.0.6            BiocManager_1.30.15.3 compiler_4.1.0        pillar_1.6.1         
-#>  [5] formatR_1.11          RColorBrewer_1.1-2    futile.logger_1.4.3   futile.options_1.0.1 
-#>  [9] base64enc_0.1-3       tools_4.1.0           digest_0.6.27         testthat_3.0.2       
-#> [13] jsonlite_1.7.2        evaluate_0.14         lifecycle_1.0.0       tibble_3.1.2         
-#> [17] gtable_0.3.0          pkgconfig_2.0.3       rlang_0.4.11          rvcheck_0.1.8        
-#> [21] yaml_2.2.1            xfun_0.23             stringr_1.4.0         dplyr_1.0.6          
-#> [25] knitr_1.33            hms_1.1.0             generics_0.1.0        vctrs_0.3.8          
-#> [29] dlstats_0.1.4         grid_4.1.0            tidyselect_1.1.1      glue_1.4.2           
-#> [33] R6_2.5.0              fansi_0.5.0           rmarkdown_2.8         ggplot2_3.3.5        
-#> [37] purrr_0.3.4           lambda.r_1.2.4        magrittr_2.0.1        htmltools_0.5.1.1    
-#> [41] scales_1.1.1          ellipsis_0.3.2        colorspace_2.0-2      utf8_1.2.1           
-#> [45] stringi_1.6.2         munsell_0.5.0         crayon_1.4.1
+#>  [1] tidyselect_1.1.1     xfun_0.25            remotes_2.4.0       
+#>  [4] purrr_0.3.4          generics_0.1.0       colorspace_2.0-2    
+#>  [7] vctrs_0.3.8          testthat_3.0.4       usethis_2.0.1       
+#> [10] htmltools_0.5.2      yaml_2.2.1           base64enc_0.1-3     
+#> [13] utf8_1.2.1           rlang_0.4.11         pkgbuild_1.2.0      
+#> [16] pillar_1.6.2         DBI_1.1.1            glue_1.4.2          
+#> [19] withr_2.4.2          RColorBrewer_1.1-2   lambda.r_1.2.4      
+#> [22] sessioninfo_1.1.1    rvcheck_0.1.8        lifecycle_1.0.0     
+#> [25] stringr_1.4.0        dlstats_0.1.4        munsell_0.5.0       
+#> [28] gtable_0.3.0         futile.logger_1.4.3  devtools_2.4.2      
+#> [31] memoise_2.0.0        evaluate_0.14        knitr_1.34          
+#> [34] callr_3.7.0          fastmap_1.1.0        ps_1.6.0            
+#> [37] fansi_0.5.0          Rcpp_1.0.7           BiocManager_1.30.16 
+#> [40] scales_1.1.1         formatR_1.11         cachem_1.0.6        
+#> [43] desc_1.3.0           pkgload_1.2.2        jsonlite_1.7.2      
+#> [46] fs_1.5.0             ggplot2_3.3.5        digest_0.6.27       
+#> [49] stringi_1.7.4        processx_3.5.2       dplyr_1.0.7         
+#> [52] rprojroot_2.0.2      grid_4.1.0           cli_3.0.1           
+#> [55] tools_4.1.0          magrittr_2.0.1       tibble_3.1.2        
+#> [58] futile.options_1.0.1 crayon_1.4.1         pkgconfig_2.0.3     
+#> [61] ellipsis_0.3.2       prettyunits_1.1.1    assertthat_0.2.1    
+#> [64] rmarkdown_2.10       R6_2.5.1             compiler_4.1.0
 ```
